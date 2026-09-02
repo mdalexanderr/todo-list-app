@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow - To-Do List</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app" aria-labelledby="app-title">
+      <header class="app-header">
+        <div>
+          <h1 id="app-title">TaskFlow</h1>
+          <p class="subtitle">Organize tasks with priorities, categories, and due dates.</p>
+        </div>
+        <button id="theme-toggle" type="button" class="ghost-btn" aria-label="Toggle dark mode">
+          🌙 Dark Mode
+        </button>
+      </header>
+
+      <section class="panel" aria-labelledby="add-task-title">
+        <h2 id="add-task-title">Add Task</h2>
+        <form id="task-form" class="task-form">
+          <div class="field full-width">
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text" maxlength="120" required aria-required="true" />
+          </div>
+
+          <div class="field full-width">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3" maxlength="500"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="due-date">Due Date</label>
+            <input id="due-date" name="due-date" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category" name="category"></select>
+          </div>
+
+          <div class="field full-width category-row">
+            <label for="new-category">Create Category</label>
+            <div class="inline-inputs">
+              <input id="new-category" name="new-category" type="text" maxlength="40" placeholder="e.g. Work" />
+              <button id="add-category" type="button">Add Category</button>
+            </div>
+          </div>
+
+          <div class="full-width actions-row">
+            <button type="submit" class="primary-btn">Add Task</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="filters-title">
+        <h2 id="filters-title">Filter & Sort</h2>
+        <div class="filters-grid">
+          <div class="field">
+            <label for="search">Search</label>
+            <input id="search" type="search" placeholder="Search title or description" />
+          </div>
+
+          <div class="field">
+            <label for="status-filter">Status</label>
+            <select id="status-filter">
+              <option value="All">All</option>
+              <option value="Active">Active</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="priority-filter">Priority</label>
+            <select id="priority-filter">
+              <option value="All">All</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="category-filter">Category</label>
+            <select id="category-filter"></select>
+          </div>
+
+          <div class="field">
+            <label for="sort-by">Sort By</label>
+            <select id="sort-by">
+              <option value="createdAt">Creation Date</option>
+              <option value="dueDate">Due Date</option>
+              <option value="priority">Priority</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="stats-title">
+        <h2 id="stats-title">Statistics</h2>
+        <div id="stats" class="stats" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="categories-title">
+        <h2 id="categories-title">Manage Categories</h2>
+        <div id="category-list" class="category-list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="tasks-title">
+        <h2 id="tasks-title">Tasks</h2>
+        <ul id="task-list" class="task-list" aria-live="polite"></ul>
+        <p id="empty-state" class="empty-state" hidden>
+          No tasks found. Add your first task to get started.
+        </p>
+      </section>
+    </main>
+
+    <dialog id="task-modal" class="task-modal" aria-labelledby="modal-title">
+      <form id="modal-form" method="dialog" class="modal-content">
+        <header>
+          <h3 id="modal-title">Task Details</h3>
+        </header>
+
+        <input type="hidden" id="modal-task-id" />
+
+        <div class="field full-width">
+          <label for="modal-title-input">Title</label>
+          <input id="modal-title-input" type="text" maxlength="120" required />
+        </div>
+
+        <div class="field full-width">
+          <label for="modal-description">Description</label>
+          <textarea id="modal-description" rows="4" maxlength="500"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="modal-priority">Priority</label>
+          <select id="modal-priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="modal-due-date">Due Date</label>
+          <input id="modal-due-date" type="date" />
+        </div>
+
+        <div class="field">
+          <label for="modal-category">Category</label>
+          <select id="modal-category"></select>
+        </div>
+
+        <footer class="modal-actions">
+          <button id="modal-delete" type="button" class="danger-btn">Delete</button>
+          <div>
+            <button id="modal-close" type="button" class="ghost-btn">Close</button>
+            <button id="modal-save" type="submit" class="primary-btn">Save</button>
+          </div>
+        </footer>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+      <span id="toast-message">Task deleted.</span>
+      <button id="undo-delete" type="button">Undo</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
